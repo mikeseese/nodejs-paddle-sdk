@@ -5,7 +5,7 @@
     "allowSyntheticDefaultImports": true,
     "target": "es6",
     "moduleResolution": "node",
-    "outDir": "dist",
+    "outDir": "dist/es",
     "declaration": true
   },
   "include": ["src"]

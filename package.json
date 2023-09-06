@@ -1,20 +1,23 @@
 {
-  "name": "@invertase/node-paddle-sdk",
+  "name": "@incanta/node-paddle-sdk",
   "private": false,
-  "version": "0.3.3",
+  "version": "1.0.0",
   "description": "A fully typed NodeJS library for integration with Paddle.",
-  "type": "module",
-  "main": "dist/node-paddle-sdk.cjs.js",
-  "module": "dist/node-paddle-sdk.es.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    "./billing": "./dist/es/billing/index.js",
+    "./billing/cjs": "./dist/cjs/billing/index.js",
+    "./classic": "./dist/es/classic/index.js",
+    "./classic/cjs": "./dist/cjs/classic/index.js"
+  },
   "scripts": {
     "lint": "eslint './src/**/*.ts' --quiet --fix",
-    "build": "rimraf dist && rollup --config rollup.config.js",
+    "build": "rimraf dist && tsc -p ./tsconfig.json && tsc -p ./tsconfig.cjs.json",
     "prepublishOnly": "npm run build"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^18.17.14",
     "@typescript-eslint/eslint-plugin": "^4.29.2",
     "@typescript-eslint/parser": "^4.29.2",
     "eslint": "^7.32.0",
