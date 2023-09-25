@@ -1,4 +1,4 @@
-import got from 'got';
+import got, { OptionsOfTextResponseBody } from 'got';
 import { createHmac } from 'crypto';
 import { GetCustomerResponse } from './types';
 
@@ -45,15 +45,18 @@ export class PaddleSDK {
 
   private async _request<T>(method: 'GET' | 'POST', path: string, body?: Record<string, any>): Promise<T> {
     const url = `${this.server}${path}`;
-    const res = await got(url, {
+    const options: OptionsOfTextResponseBody = {
       method,
       headers: {
-        'Authorization': `Bearer ${this.vendorAuthCode}}`,
+        Authorization: `Bearer ${this.vendorAuthCode}}`,
       },
-      form: {
+    };
+    if (body) {
+      options.form = {
         ...(body || {}),
-      },
-    }).json<PaddleApiResult<T>>();
+      };
+    }
+    const res = await got(url, options).json<PaddleApiResult<T>>();
 
     if (res.success === true) {
       return res.response;

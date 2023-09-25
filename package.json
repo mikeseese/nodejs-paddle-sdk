@@ -1,7 +1,7 @@
 {
   "name": "@incanta/node-paddle-sdk",
   "private": false,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A fully typed NodeJS library for integration with Paddle.",
   "exports": {
     "./billing": "./dist/es/billing/index.js",
