@@ -4,16 +4,26 @@ import { GetCustomerResponse } from './types';
 
 export * from './types';
 
-type PaddleApiResult<T> =
+type PaddleApiResult =
   | {
-      success: true;
-      response: T;
+      data: any;
+      meta: {
+        request_id: string;
+      };
     }
   | {
-      success: false;
       error: {
+        type: string;
         code: number;
-        message: string;
+        detail: string;
+        documentation_url: string;
+        errors: {
+          field: string;
+          message: string;
+        }[];
+      };
+      meta: {
+        request_id: string;
       };
     };
 
@@ -48,7 +58,7 @@ export class PaddleSDK {
     const options: OptionsOfTextResponseBody = {
       method,
       headers: {
-        Authorization: `Bearer ${this.vendorAuthCode}}`,
+        Authorization: `Bearer ${this.vendorAuthCode}`,
       },
     };
     if (body) {
@@ -56,17 +66,17 @@ export class PaddleSDK {
         ...(body || {}),
       };
     }
-    const res = await got(url, options).json<PaddleApiResult<T>>();
+    const res = await got(url, options).json<PaddleApiResult>();
 
-    if (res.success === true) {
-      return res.response;
+    if ('error' in res) {
+      throw new PaddleHttpError(res.error.code, JSON.stringify(res.error));
     }
 
-    throw new PaddleHttpError(res.error.code, res.error.message);
+    return res as T;
   }
 
   public async getCustomer(customer_id: string): Promise<GetCustomerResponse> {
-    return this._request<GetCustomerResponse>('GET', `/product/list_coupons/${customer_id}`);
+    return this._request<GetCustomerResponse>('GET', `/customers/${customer_id}`);
   }
 
   public verifyWebhook(requestSignature: string | undefined, rawBody: Buffer | string): boolean {
